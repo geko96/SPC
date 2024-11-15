@@ -1,5 +1,5 @@
 import { Router } from "express";
-import dbConnection from '../../../knexfile.js';
+import { dbConnection } from "../../lib/db/knextInitialization.js";
 
 const router = Router();
 
