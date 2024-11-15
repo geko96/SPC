@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPC - Perfil de Usuario</title>
+    <link rel="stylesheet" href="perfil.css">
+</head>
+<body>
+    <header>
+        <div class="banner">
+            <h1>SPC - Perfil</h1>
+        </div>
+    </header>
+
+    <main>
+        <section id="perfil-contenido">
+            <h2>Perfil de Usuario</h2>
+            <!-- Mostrar el contenido dependiendo de si el usuario ha iniciado sesión -->
+            <div id="perfil-usuario">
+                <!-- Si no ha iniciado sesión -->
+                <div id="no-sesion" class="oculto">
+                    <p>No has iniciado sesión.</p>
+                    <button onclick="window.location.href='login.html'">Iniciar Sesión</button>
+                    <button onclick="window.location.href='registro.html'">Registrarse</button>
+                </div>
+
+                <!-- Si ha iniciado sesión -->
+                <div id="datos-usuario" class="oculto">
+                    <h3>Información Personal</h3>
+                    <p><strong>Nombre:</strong> <span id="nombre-usuario"></span></p>
+                    <p><strong>Correo Electrónico:</strong> <span id="email-usuario"></span></p>
+
+                    <h3>Pedidos Realizados</h3>
+                    <div id="lista-pedidos">
+                        <!-- Los pedidos se insertarán aquí -->
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SPC</p>
+    </footer>
+
+    <script src="perfil.js"></script>
+</body>
+</html>

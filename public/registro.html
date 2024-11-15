@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPC - Registrarse</title>
+    <link rel="stylesheet" href="registro.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <div class="banner">
+            <h1>SPC</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="formulario">
+            <h2>Registrarse</h2>
+            <form id="registro-form">
+                <input type="text" placeholder="&#xf007; Nombre de Usuario" id="username" required>
+                <input type="email" placeholder="&#xf0e0; Correo Electrónico" id="email" required>
+                <input type="password" placeholder="&#xf023; Contraseña" id="password" required>
+                <button type="submit"><i class="fas fa-user-plus"></i> Registrarse</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SPC</p>
+    </footer>
+
+    <script>
+        document.getElementById("registro-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            // Lógica para el registro, este es solo un ejemplo
+            const username = document.getElementById("username").value;
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            // Simulación de registro exitoso
+            if (username && email && password) {
+                window.location.href = "index.html"; // Redirección a la página principal
+            } else {
+                alert("Por favor, complete todos los campos");
+            }
+        });
+    </script>
+</body>
+
+</html>

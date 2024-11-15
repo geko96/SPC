@@ -1,0 +1,89 @@
+
+-- 1 Mostrar los datos de los dispositivos y su sector
+
+dbConnection.raw('SELECT Dispositivo.Marca, Dispositivo.Tipo, Sector.Descripcion AS Sector FROM Dispositivo JOIN Sector ON Dispositivo.Id_Sector = Sector.Id_Sector;').then(function (resp) {
+    console.log(resp);
+});
+
+
+-- 2 Mostrar cuantas fichadas registro el dispositivo del Labratorio A. Tambien se debe mostrar la marca
+dbConnection.raw("SELECT COUNT(Fichada.Id_Fichada) AS 'Fichadas Registradas', Dispositivo.Marca, Sector.Descripcion AS Sector FROM Dispositivo JOIN Sector ON Dispositivo.Id_Sector = Sector.Id_Sector JOIN Fichada ON Fichada.Id_Dispositivo = Dispositivo.Id_Dispositivo GROUP BY Dispositivo.Marca, Sector.Descripcion;").then(function (resp) {
+    console.log(resp);
+});
+
+-- 3 Mostrar los datos de las personas que entran a las 7:45 y quienes a las 14:10
+dbConnection.raw("SELECT Legajo.Primer_Nombre AS 'Primer Nombre', Legajo.Primer_Apellido AS 'Primer Apellido', Horario.Horario_Entrada AS 'Horario de Entrada' FROM Legajo JOIN Legajo_Horario ON Legajo.Id_Legajo = Legajo_Horario.Id_Legajo JOIN Horario ON Horario.Id_Horario = Legajo_Horario.Id_Horario WHERE Horario.Horario_Entrada = '07:45:00' OR Horario.Horario_Entrada = '14:10:00';").then(function (resp) {
+    console.log(resp);
+});
+
+-- 4 Mostrar cuantos profesores y alumnos hay
+dbConnection.raw("SELECT TipoLegajo.TipoLegajo AS 'Tipo de legajo', COUNT(Legajo.Id_Legajo) AS Cantidad FROM Legajo  JOIN TipoLegajo ON Legajo.Id_TipoLegajo = TipoLegajo.Id_TipoLegajo WHERE TipoLegajo.TipoLegajo = 'Profesor' OR TipoLegajo.TipoLegajo = 'Alumno' GROUP BY TipoLegajo.TipoLegajo;").then(function (resp) {
+    console.log(resp);
+});
+
+-- 5 Mostrar cuantas personas viven en cada localidad
+dbConnection.raw("SELECT Localidad.Localidad, COUNT(Legajo.Id_Localidad) AS Cantidad FROM Legajo  JOIN Localidad ON Legajo.Id_Localidad = Localidad.Id_Localidad GROUP BY Localidad.Localidad;").then(function (resp) {
+    console.log(resp);
+});
+
+-- 6 Mostrar cuantas personas faltaron por el motivo y el motivo
+dbConnection.raw("SELECT Motivo.Motivo, COUNT(Novedad.Id_Motivo) AS 'Cantidad de personas' FROM Novedad  JOIN Motivo ON Novedad.Id_Motivo = Motivo.Id_Motivo  GROUP BY Motivo.Motivo;").then(function (resp) {
+    console.log(resp);
+});
+
+-- 7 Mostrar cuantas personas hay en cada turno
+dbConnection.raw("SELECT Turno.Turno, COUNT(Legajo.Id_Legajo) AS 'Cantidad de personas' FROM Legajo  JOIN Legajo_Horario ON Legajo.Id_Legajo = Legajo_Horario.Id_Legajo JOIN Horario ON Horario.Id_Horario = Legajo_Horario.Id_Horario JOIN Turno ON Turno.Id_Turno = Horario.Id_Turno GROUP BY Turno.Turno;").then(function (resp) {
+    console.log(resp);
+});
+
+-- 8 Mostrar las personas que tengan un motivo de falta (Incluir dia inicial y final)
+dbConnection.raw("SELECT Legajo.Primer_Nombre AS 'Primer nombre', Legajo.Primer_Apellido AS 'Primer apellido', Motivo.Motivo, Novedad.Fecha_Inicio AS 'Fecha de inicio', Novedad.Fecha_Final AS 'Fecha final' FROM Motivo JOIN Novedad ON Novedad.Id_Motivo = Motivo.Id_Motivo JOIN Legajo_Novedad ON Legajo_Novedad.Id_Novedad = Novedad.Id_Novedad JOIN Legajo ON Legajo.Id_Legajo = Legajo_Novedad.Id_Legajo;").then(function (resp) {
+    console.log(resp);
+});
+
+-- 9 Mostrar los horarios de todos los profesores del turno mañana
+dbConnection.raw("SELECT Horario.Horario_Entrada AS 'Horario de entrada', Horario.Horario_Salida AS 'Horario de salida' FROM Horario JOIN Turno ON Turno.Id_Turno = Horario.Id_Turno JOIN Legajo_Horario ON Legajo_Horario.Id_Horario = Horario.Id_Horario JOIN Legajo ON Legajo.Id_Legajo = Legajo_Horario.Id_Legajo JOIN TipoLegajo ON TipoLegajo.Id_TipoLegajo = Legajo.Id_TipoLegajo WHERE TipoLegajo.TipoLegajo = 'Profesor' AND Turno.Turno = 'Mañana';").then(function (resp) {
+    console.log(resp);
+});
+
+
+-- 10 Mostrar quienes ficharon entre entre las 7:45 y las 12:25 
+dbConnection.raw("SELECT Legajo.Primer_Nombre AS 'Primer Nombre', Legajo.Segundo_Nombre AS 'Segundo Nombre', Legajo.Primer_Apellido AS 'Primer Apellido', Legajo.Segundo_Apellido AS 'Segundo Apellido', Fichada.Fecha_Fichada AS 'Fecha de Fichada', Fichada.Hora_Fichada AS 'Hora de Fichada' FROM Legajo  JOIN Fichada ON Legajo.Id_Legajo = Fichada.Id_Legajo WHERE Fichada.Hora_Fichada BETWEEN '07:45:00' AND '12:25:00';").then(function (resp) {
+    console.log(resp);
+});
+
+-- 11 Mostrar quienes ficharon entre entre las 14:10 y las 19:25 
+dbConnection.raw("SELECT Legajo.Primer_Nombre AS 'Primer Nombre', Legajo.Segundo_Nombre AS 'Segundo Nombre', Legajo.Primer_Apellido AS 'Primer Apellido', Legajo.Segundo_Apellido AS 'Segundo Apellido', Fichada.Fecha_Fichada AS 'Fecha de Fichada', Fichada.Hora_Fichada AS 'Hora de Fichada' FROM Legajo  JOIN Fichada ON Legajo.Id_Legajo = Fichada.Id_Legajo WHERE Fichada.Hora_Fichada BETWEEN '14:10:00' AND '19:25:00';").then(function (resp) {
+    console.log(resp);
+});
+
+-- 12 Mostrar todos los datos de las personas que tengan una novedad
+dbConnection.raw("SELECT Legajo.Primer_Nombre AS 'Primer nombre', Legajo.Segundo_Nombre AS 'Segundo nombre', Legajo.Primer_Apellido AS 'Primer apellido', Legajo.Segundo_Apellido AS 'Segundo apellido', Legajo.DNI, Legajo.Fecha_Nacimiento AS 'Fecha de nacimiento', Legajo.Direccion, Legajo.Correo, Localidad.Localidad, Novedad.Fecha_Inicio AS 'Fecha de inicio', Novedad.Fecha_Final AS 'Fecha final', Motivo.Motivo  FROM Legajo  JOIN Legajo_Novedad ON Legajo.Id_Legajo = Legajo_Novedad.Id_Legajo  JOIN Novedad ON Legajo_Novedad.Id_Novedad = Novedad.Id_Novedad  JOIN Motivo ON Novedad.Id_Motivo = Motivo.Id_Motivo  JOIN Localidad ON Legajo.Id_Localidad = Localidad.Id_Localidad;").then(function (resp) {
+    console.log(resp);
+});
+
+-- 13 Mostrar los datos de las personas que ficharon tarde (después de la hora de entrada + la tolerancia)
+dbConnection.raw("SELECT Legajo.Primer_Nombre AS 'Primer nombre', Legajo.Segundo_Nombre AS 'Segundo nombre', Legajo.Primer_Apellido AS 'Primer apellido', Legajo.Segundo_Apellido AS 'Segundo apellido', Legajo.DNI, Legajo.Fecha_Nacimiento AS 'Fecha de nacimiento', Legajo.Direccion, Legajo.Correo, Fichada.Fecha_Fichada AS 'Fecha de fichada', Fichada.Hora_Fichada AS 'Hora de fichada', Horario.Horario_Entrada AS 'Horario de entrada', Horario.Horario_Salida AS 'Horario de salida', Localidad.Tolerancia  FROM Legajo  JOIN Fichada ON Legajo.Id_Legajo = Fichada.Id_Legajo  JOIN Dispositivo ON Fichada.Id_Dispositivo = Dispositivo.Id_Dispositivo  JOIN Sector ON Dispositivo.Id_Sector = Sector.Id_Sector  JOIN Localidad ON Legajo.Id_Localidad = Localidad.Id_Localidad  JOIN Legajo_Horario ON Legajo.Id_Legajo = Legajo_Horario.Id_Legajo  JOIN Horario ON Legajo_Horario.Id_Horario = Horario.Id_Horario  JOIN Turno ON Horario.Id_Turno = Turno.Id_Turno  WHERE Fichada.Hora_Fichada > ADDTIME(Horario.Horario_Entrada, Localidad.Tolerancia);").then(function (resp) {
+    console.log(resp);
+});
+
+-- 14 Mostrar cuantas personas de cada localidad llegaron tarde
+dbConnection.raw("SELECT Localidad.Localidad, COUNT(DISTINCT Legajo.Id_Legajo) AS 'Cantidad de personas que llegan tarde'  FROM Legajo  JOIN Fichada ON Legajo.Id_Legajo = Fichada.Id_Legajo  JOIN Dispositivo ON Fichada.Id_Dispositivo = Dispositivo.Id_Dispositivo  JOIN Sector ON Dispositivo.Id_Sector = Sector.Id_Sector  JOIN Localidad ON Legajo.Id_Localidad = Localidad.Id_Localidad  JOIN Legajo_Horario ON Legajo.Id_Legajo = Legajo_Horario.Id_Legajo  JOIN Horario ON Legajo_Horario.Id_Horario = Horario.Id_Horario  JOIN Turno ON Horario.Id_Turno = Turno.Id_Turno  WHERE Fichada.Hora_Fichada > ADDTIME(Horario.Horario_Entrada, Localidad.Tolerancia) GROUP BY Localidad.Localidad;").then(function (resp) {
+    console.log(resp);
+});
+
+
+
+--verificar si un usuario existe
+if(req.body.usuario && req.body.password){
+        let result = await dbConnection.raw('SELECT * FROM usuario WHERE usuario = ?', [req.body.usuario]);        console.log(result);
+        res.json({
+            message: 'Usuario existente',
+            data: result
+        });
+    
+    }else{
+        res.status(400).json({
+            message: 'Bad request'
+        });
+    }

@@ -1,0 +1,59 @@
+
+```javascript
+router.post('/', async (req, res) => {
+    if (req.body.usuario && req.body.password) {
+        try {
+            let [rows] = await dbConnection.raw('SELECT * FROM usuario WHERE usuario = ? AND password = ?', [req.body.usuario, req.body.password]);
+            
+            console.log(rows);
+            
+            if (rows.length > 0) {
+                res.json({
+                    message: 'Inicio exitoso',
+                    data: rows[0]  // Enviamos solo el primer usuario encontrado
+                });
+            } else {
+                res.status(401).json({
+                    message: 'Inicio fallido: Usuario o contraseña incorrectos'
+                });
+            }
+        } catch (error) {
+            console.error('Error en la consulta:', error);
+            res.status(500).json({
+                message: 'Error interno del servidor'
+            });
+        }
+    } else {
+        res.status(400).json({
+            message: 'Inicio fallido: Falta usuario o contraseña'
+        });
+    }
+});
+
+```
+
+Explicación de los cambios:
+
+1. Desestructuración del resultado: `let [rows] = await dbConnection.raw(...)`. Esto asume que `raw()` devuelve un array donde el primer elemento son las filas resultantes.
+
+2. Verificación del resultado: Ahora verificamos si `rows.length > 0` para determinar si se encontró un usuario que coincida.
+
+3. Respuestas diferenciadas: 
+   - Éxito (200): Cuando se encuentra un usuario que coincide.
+   - No autorizado (401): Cuando no se encuentra un usuario que coincida.
+   - Solicitud incorrecta (400): Cuando falta el usuario o la contraseña en la solicitud.
+   - Error del servidor (500): Para cualquier error inesperado durante la consulta.
+
+4. Manejo de errores: Añadido un bloque try-catch para manejar errores de base de datos.
+
+5. Logging: Se mantiene el `console.log(rows)` para depuración.
+
+Consideraciones adicionales:
+
+- Seguridad: Este código aún no es seguro para producción. Las contraseñas no deberían almacenarse en texto plano en la base de datos, sino hasheadas.
+  
+- Verificación de contraseña: Idealmente, deberías obtener el usuario por nombre de usuario solamente, y luego verificar la contraseña hasheada.
+
+- Inyección SQL: Aunque estamos usando parámetros, lo cual es bueno, considera usar un ORM como Sequelize o TypeORM para mayor seguridad y facilidad de uso.
+
+- Información sensible: En producción, evita enviar toda la información del usuario en la respuesta. Envía solo lo necesario.

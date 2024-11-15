@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPC - Iniciar Sesión</title>
+    <link rel="stylesheet" href="login.css">
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <header>
+        <div class="banner">
+            <h1>SPC</h1>
+        </div>
+    </header>
+
+    <main>
+        <section class="formulario">
+            <h2>Iniciar Sesión</h2>
+            <form id="login-form">
+                <input type="text" placeholder="&#xf007; Nombre de Usuario" id="username" required>
+                <input type="password" placeholder="&#xf023; Contraseña" id="password" required>
+                <button type="submit"><i class="fas fa-sign-in-alt"></i> Iniciar Sesión</button>
+            </form>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 SPC</p>
+    </footer>
+
+    <script>
+        document.getElementById("login-form").addEventListener("submit", function(event) {
+            event.preventDefault();
+            // Lógica para la autenticación, este es solo un ejemplo
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            // Simulación de autenticación exitosa
+            if (username === "usuario" && password === "password") {
+                window.location.href = "index.html"; // Redirección a la página principal
+            } else {
+                alert("Nombre de usuario o contraseña incorrectos");
+            }
+        });
+    </script>
+</body>
+
+</html>
