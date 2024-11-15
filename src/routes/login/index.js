@@ -12,21 +12,26 @@ router.get('/', (req, res) => {
 router.post('/', async (req, res) => {
     if (req.body.usuario && req.body.password) {
         try {
-            let [rows] = await dbConnection.raw('SELECT * FROM usuario WHERE usuario = ? AND password = ?', [req.body.usuario, req.body.password]);
+            const {usuario, password} = req.body;
+            let rows = await dbConnection('usuarios').where({Nombre_de_Usuario: usuario});
             
-            //console.log(rows);
-            
-            if (rows.length > 0) {
-                res.json({
-                    message: 'Inicio exitoso',
-                    data: rows[0],  // Enviamos solo el primer usuario encontrado
-                    token: '1234567890'
+            if(rows.length === 0){
+                res.status(404).json({
+                    message: 'Usuario no encontrado'
                 });
-            } else {
+                return;
+            } else if (rows[0].Contraseña !== password){
                 res.status(401).json({
-                    message: 'Inicio fallido: Usuario o contraseña incorrectos'
+                    message: 'Contraseña incorrecta'
+                });
+                return;
+            }  else {
+                res.status(200).json({
+                    message: 'Inicio de sesión exitoso',
+                    usuario: rows[0],
                 });
             }
+            
         } catch (error) {
             console.error('Error en la consulta:', error);
             res.status(500).json({
